@@ -21,16 +21,18 @@ def collate_func(batch):
 
 class SetSample(Function):
     @staticmethod
-    def forward(ctx, input, pos):
+    def forward(ctx, input, pos, training):
         """
             We set one element.
         :param ctx: unused
         :param input: the input tensor
         :param poz: position where we want to make things zero
+        :param training: is it during training, then do not change the value
         :return:
         """
         out = input
-        out[pos] = 0
+        if not training:
+            out[pos] = 0
         return out
 
     @staticmethod
@@ -78,7 +80,7 @@ class Network(nn.Module):
         nn.init.xavier_uniform_(self.convt4.weight)
         nn.init.xavier_uniform_(self.convt5.weight)
 
-    def forward(self, x, pos):
+    def forward(self, x, pos,training):
         """
         The forward pass of the network.
         :param x: Input to the NN
@@ -98,7 +100,7 @@ class Network(nn.Module):
         x = F.relu(self.convt3(x))
         x = F.relu(self.convt4(x))
         x = self.convt5(x)
-        x = self.zero_out(x, pos)
+        x = self.zero_out(x, pos, training)
         return x
 
 
@@ -227,7 +229,7 @@ def run_test(checkpoint=8):
 
         local_batch = local_batch.to(device)
         net.to(device)
-        outputs = net(local_batch,(0,0,0,0))
+        outputs = net(local_batch,(0,0,0,0),training=False)
         pred = torch.argmax(outputs, dim=1)  # we get the predictions
         pred = np.array(pred.cpu().numpy(), dtype='uint8')  # take things back in cpu space and make them uint8
 

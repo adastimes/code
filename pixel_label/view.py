@@ -90,4 +90,4 @@ def run_test(directory, checkpoint=8):
         progress(np.int(100*procent / nr_samples))
 
 
-run_test(checkpoints_dir + '/view', 8)
+run_test(checkpoints_dir + '/view', 18)
