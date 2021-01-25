@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CamRecorder</string>
+    <string name="take_photo">Capture</string>
+    <string name="unknown">UNKNOWN</string>
+    <string name="run_nn">Run</string>
+    <string name="pic_desc">pic_desc</string>
+</resources>
